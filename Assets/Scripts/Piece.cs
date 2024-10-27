@@ -16,6 +16,8 @@ public class Piece : MonoBehaviour
     private float moveTime;
     private float lockTime;
 
+    public UIManager uiManager;
+
     /// <summary>
     /// Initializes the piece with the specified board, position, and tetromino data.
     /// </summary>
@@ -99,6 +101,7 @@ public class Piece : MonoBehaviour
             {
                 // Update the step time to prevent double movement
                 stepTime = Time.time + stepDelay;
+                IncrementDropScore();
             }
         }
 
@@ -110,6 +113,14 @@ public class Piece : MonoBehaviour
         else if (Input.GetKey(KeyCode.D))
         {
             Move(Vector2Int.right);
+        }
+    }
+
+    private void IncrementDropScore()
+    {
+        if (uiManager != null)
+        {
+            uiManager.AddScore(1);
         }
     }
 
@@ -137,6 +148,7 @@ public class Piece : MonoBehaviour
     {
         while (Move(Vector2Int.down))
         {
+            IncrementDropScore();
             continue;
         }
 

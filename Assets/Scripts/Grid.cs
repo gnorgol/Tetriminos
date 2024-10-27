@@ -11,6 +11,9 @@ public class Grid : MonoBehaviour
     public Vector2Int boardSize = new Vector2Int(10, 20);
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
 
+    public UIManager uiManager;
+
+
     /// <summary>
     /// Gets the bounds of the game board.
     /// </summary>
@@ -71,6 +74,10 @@ public class Grid : MonoBehaviour
     public void GameOver()
     {
         tilemap.ClearAllTiles();
+        if (uiManager != null)
+        {
+            uiManager.ResetUI();
+        }
     }
 
     /// <summary>
@@ -131,12 +138,13 @@ public class Grid : MonoBehaviour
     }
 
     /// <summary>
-    /// Clears full lines from the board.
+    /// Clears full lines from the board and adds score.
     /// </summary>
     public void ClearLines()
     {
         RectInt bounds = Bounds;
         int row = bounds.yMin;
+        int linesCleared = 0;
 
         // Clear from bottom to top
         while (row < bounds.yMax)
@@ -146,11 +154,18 @@ public class Grid : MonoBehaviour
             if (IsLineFull(row))
             {
                 LineClear(row);
+                linesCleared++;
             }
             else
             {
                 row++;
             }
+        }
+        // Add score for cleared lines
+        if (linesCleared > 0 && uiManager != null)
+        {
+            uiManager.AddLine(linesCleared);
+            uiManager.AddScore(linesCleared * 100);
         }
     }
 
